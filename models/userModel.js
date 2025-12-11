@@ -1,14 +1,14 @@
-const db = require('../config/db');
+const mysql = require('mysql2')
+const dotenv = require('dotenv')
+dotenv.config()
 
-//async - wait
-const getAllBooks = async () => {
-    const [rows] = await db.query("select * from buku");
-    return rows
-};
+const pool = mysql.createPool({
+    host : process.env.DB_HOST,
+    user : process.env.DB_USER,
+    password : process.env.DB_PASSWORD,
+    database : process.env.DB_NAME
+})
 
-const getBookByCode = async (code) => {
-    const [row] = await db.query("select * from buku where kode_buku = ?", [code]);
-    return row[0]
-};
+const poolPromise = pool.promise()
 
-module.exports = {getAllBooks, getBookByCode};
+module.exports = poolPromise
